@@ -9,3 +9,7 @@ live session link : https://devops.learnyst.com/
 lab link : https://learndevopsonline.my.canva.site/lab-help
 
  AWS sign in Page	https://us-east-1.console.aws.amazon.com/console/home?region=us-east-1
+
+ Project document
+
+ https://learndevopsonline.github.io/learndevopsonline/build/docs/category/expense-app-project-setup-documentation---rhel-9centos-9/
