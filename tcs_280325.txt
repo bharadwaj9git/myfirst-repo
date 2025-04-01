@@ -1,0 +1,226 @@
+my answers for below two codes
+
+example for forall operation
+
+declare
+
+type typ_nst is table of emp%rowtype;
+typ typ_nts;
+
+
+begin
+
+select e.* bulkcollect into typ from emp limt 4;
+
+for i in 1..typ.count loop
+
+forall update emp2 values(typ(i).empid,typ(i).deptid);
+
+end lopp;
+
+end;
+
+
+01,02,03 
+
+
+second highest salary
+
+select max(sal) as secondmax sal from emp where sal <(select max(sal) from emp);
+
+
+
+1st interviewr questions
+
+
+== what is bad file,discard file?
+
+bad file- contains records not loaded due to errors like syntactical erros,
+data type mismatch,constraint violations,missing required fields
+discard file-  records those are intentionnaly skipped based on filter conditions
+i.e when condition fails.
+
+load data infile 'emp.csv' badfile 'emp.bad' discard 'emp.dis' into table emp
+fields terminated by ',' trailing nullcols when dept_no='10' 
+( empid,emp_name,dept_no,sal)
+
+== what is bulk collect
+
+it will collect the multiple rows from select statement and will place into collection variable in a single operation.
+it will reduces the no.of context switches b/w sql engine and plsql engine.
+
+ex:
+
+DECLARE
+    TYPE emp_table IS TABLE OF employees%ROWTYPE;
+    emp_data emp_table;  -- Collection to store multiple rows
+BEGIN
+    SELECT * BULK COLLECT INTO emp_data FROM employees WHERE salary > 5000;
+
+    -- Print results
+    FOR i IN 1..emp_data.COUNT LOOP
+        DBMS_OUTPUT.PUT_LINE(emp_data(i).emp_id || ' - ' || emp_data(i).emp_name);
+    END LOOP;
+END;
+/
+
+
+
+== what is forall
+it is bulkDML feature in plsql, when we perform dml operations on bulk data.
+it will reduces the no.of context switches b/w plsql engine and sql engine.
+
+DECLARE
+    TYPE emp_ids IS TABLE OF employees.emp_id%TYPE;
+    emp_list emp_ids := emp_ids(101, 102, 103);  -- List of employees to update
+BEGIN
+    -- Bulk update salaries
+    FORALL i IN 1..emp_list.COUNT
+        UPDATE employees
+        SET salary = salary * 1.10  -- Increase salary by 10%
+        WHERE emp_id = emp_list(i);
+
+    COMMIT;
+    DBMS_OUTPUT.PUT_LINE('Salaries Updated in Bulk');
+END;
+/
+
+
+
+== what is for update
+If we write for update along with cursor select statement exclusively row level lock will 
+be applied for all the rows which are identified by that cursor select statement. Until we give 
+commit no one cannot be modify those rows. 
+
+
+== what is where current of
+Generally we cannot perform DML operations when we using cursor for update in our 
+program if we want to perform DML operations on which are locked by the cursor for update the 
+we should go for the “where current of”. 
+
+Ex: 
+CREATE OR REPLACE PROCEDURE SP_FOR_UPDATE 
+AS 
+CURSOR C1 IS SELECT * FROM EMP FOR UPDATE; 
+VEC EMP%ROWTYPE; 
+BEGIN 
+OPEN C1; 
+LOOP 
+FETCH C1 INTO VEC; 
+EXIT WHEN C1%NOTFOUND; 
+UPDATE EMP SET COMM=SAL*10/100 WHERE CURRENT OF C1; 
+END LOOP; 
+CLOSE C1;
+END;
+
+
+== what is bfile
+In Oracle SQL, BFILE (Binary File) is a data type used to store large binary objects (LOBs) that reside outside the database in the operating system file system. 
+Unlike BLOB, which is stored inside the database, a BFILE is only a pointer (a reference) to an external file.
+
+CREATE OR REPLACE DIRECTORY my_bfile_dir AS '/path/to/external/files';
+GRANT READ ON DIRECTORY my_bfile_dir TO some_user;
+
+
+CREATE TABLE my_table (
+    id NUMBER PRIMARY KEY,
+    file_data BFILE
+);
+
+INSERT INTO my_table (id, file_data) 
+VALUES (1, BFILENAME('MY_BFILE_DIR', 'example.pdf'));
+
+When you need read-only access to external files.
+When you need to store large binary files (like images, PDFs, videos) but do not want to store them inside the database.
+
+== what is dbms_profile
+
+DBMS_PROFILER is a predefined package.It is useful know the performance our program taking even it is procedure (or) function. It is used 
+get information like how many times each statement is executing how much time it is taken to execute 
+that statement.
+
+for this we need one view i.e all_source, PLSQL_PROFILER_DATA table
+
+
+ BEGIN 
+DBMS_PROFILER.start_profiler('SP_DATA_LOADINNG'); 
+SP_DATA_LOADINNG; 
+DBMS_PROFILER.stop_profiler; 
+END; 
+
+ Here  
+ start_profiler, stop_profiler are packaged procedures in the 
+“DBMS_PROFILER” package.
+ 
+ SP_DATA_LOADINNG is a individual profiler which is we want to know the run time. 
+
+ After executing this then we want to check the result then we want to result we should go for that 
+two tables join like: 
+
+Ex: SELECT A.TEXT, A.line, P.TOTAL_OCCUR, P.TOTAL_TIME/1000  
+FROM ALL_SOURCE A, PLSQL_PROFILER_DATA P  
+WHERE A.line=P.LINE
+AND A.name='SP_DATA_LOADINNG'; 
+
+
+== what are the collection datatypes 
+nested table
+varray
+plsql table or associative array
+
+
+
+2nd interviewr questions
+
+== what is blob
+
+In Oracle SQL, BLOB (Binary Large Object) is a data type used to store large binary data inside the database. 
+
+Stores Large Binary Data: Used for storing images, videos, PDFs, audio files, etc.
+Stored in the Database: Unlike BFILE, which is a pointer to an external file, BLOBs are stored inside the database.
+Supports Read & Write Operations: Unlike BFILE (which is read-only), BLOB data can be modified.
+Supports Transactions: Since it is stored in the database, BLOBs are covered by Oracle’s ACID properties (Atomicity, Consistency, Isolation, Durability).
+
+Maximum Size: Up to 128 TB (depends on block size and storage configuration).
+
+When to Use BLOB vs. BFILE?
+Feature	                 BLOB	                                     BFILE
+Storage	             inside the database	                     Outside the database
+Read/Write	     Supports both	                             Read-only
+Transaction Support	Yes	                                     No
+Maximum Size	       128 TB	                                     4 GB (OS Limit)
+Backup & Recovery    Managed by Oracle	                             Handled externally
+Performance	    Slightly slower for large files	             Faster for reading large files
+
+Use BLOB when:
+✅ You need full database control (transactions, backups, security).
+✅ You need to modify the binary data.
+
+Use BFILE when:
+✅ Files are too large and should remain outside the database.
+✅ The data is read-only and does not need transactional consistency.
+
+== what is the diff b/w varchar and varchar2
+
+
+Feature	                         VARCHAR	                                                             VARCHAR2
+Definition	             ANSI standard data type (not fully supported in Oracle)	               Oracle-specific data type
+Usage in Oracle	             Allowed for compatibility but behaves like VARCHAR2	               Fully supported and recommended for use
+Storage	                     May store extra space for future expansion (behavior is uncertain)	       Stores only the actual data (no extra space)
+Behaviorin Comparisons	     May treat empty strings as NULL in some implementations	               Treats empty strings as NULL in Oracle
+Future Support	             Deprecated (may be removed in future versions)	                       Actively supported
+
+
+== what is bitmap index
+
+A Bitmap Index is a special type of index in Oracle that uses bitmaps (arrays of bits) to efficiently store and retrieve data, 
+especially for columns with low cardinality (i.e., few distinct values). 
+Instead of storing row IDs like a traditional B-tree index, 
+it stores bitmaps for each distinct value, 
+reducing storage space and improving performance in certain queries.
+
+Columns with low cardinality (e.g., gender, marital status, department).
+
+== how to find second highest salary
+
+select max(sal) secondmaxsal from emp where sal < (select max(sal) from emp);
