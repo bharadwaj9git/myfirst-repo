@@ -1,4 +1,5 @@
 my answers for below two codes
+first code is wrong second one is correct
 
 example for forall operation
 
