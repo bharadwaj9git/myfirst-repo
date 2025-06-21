@@ -1,0 +1,360 @@
+
+https://youtu.be/v2gQzTp0eiQ
+
+sudo su - (to become root user) 
+clear or ctrl+l - to clear screen
+history - it wl show all the used commands before
+hostname (to know hostname)
+hostname -i (ip address it will give)
+ifconfig (like ipconfig in windows)
+
+yum
+===
+yum update -y (to update any last changes in the server)
+yum install httpd -y(to install httpd package)
+yum remove httpd -y (to uninstall httpd package)
+yum list installed ( it will list out all the installed packages(package is nothing but application))
+
+service
+=======
+service httpd start (to start service)
+service httpd status(to check status)
+service httpd reload (to reload service)
+service httpd stop (to stop service)
+
+
+systemctl
+=======
+systemctl httpd start (to start service)
+systemctl httpd status(to check status)
+systemctl httpd reload (to reload service)
+systemctl httpd stop (to stop service)
+systemctl enable httpd (enable httpd)
+systemctl disable httpd (disable httpd)
+
+chkconfig
+=========
+chkconfig httpd on (auto start)
+chkconfig httpd off (auto off)
+
+create file
+===========
+cat
+---
+cat >filename press enter
+<content>
+ctrl+d to comeout
+
+if u want to see file content do cat filename
+to add more text cat >>filename
+
+touch
+----- 
+touch filename
+it will create empty file only
+
+nano
+----
+nano filename press enter
+to come out from the file press ctrl+x
+
+vi/vim
+------
+vi filename
+i for insert
+to exit press esc key after that :wq!
+
+vi/vim,nano both are editors,touch only creates empty file,
+cat we can create file and add content.
+it is case senstive it should be all lower case
+
+to hide files we need to put "." before file name
+
+ex: cat >.saitest1
+
+touch dira/dirb/dirc/file2c
+cat >dira/dirb/file22
+
+this way also we will create files to the destination path
+
+list
+====
+ls == list all the file nd directories 
+ls -l  == long list
+ls -a == to show hidden list
+ls -la == hidden long list
+
+tree (it will display tree structure info)
+
+yum install tree -y
+
+create directory
+================ 
+directory is nothing but folder in windows
+
+mkdir directory name 
+it will create one directory
+
+mkdir -p dira/dirb/dirc
+it will create parent and child directories 
+
+to hide files we need to put "." before file name
+
+ex: mkdir.saitest1
+
+change directory
+================
+cd directory name
+cd .. to backward
+cd dira/dirb  to forward
+pwd (present working directory)
+
+copy
+====
+to copy files
+cp sourcefile destinationfile
+
+to copy directory
+cp -r dira dir1  r means recursive
+
+move and rename
+===============
+mv sourcefile destinationfile
+
+to rename also we will use mv
+
+mv sourcfilename newfilename
+
+remove
+======
+to remove file
+rm filename
+
+to remove directory
+rm -rf directoryname
+
+to search
+=========
+grep- global regular expression
+
+grep root /etc/passwd
+
+to open file
+============
+less /etc/passwd
+more /etc/passwd
+cat /etc/passwd
+
+===>
+head /etc/passwd
+
+by default it wl show 10 lines
+top few lines
+head -5 /etc/passwd
+
+===>
+tail /etc/passwd
+bottom it will give10
+
+tail -5 /etc/passwd
+5 lines it wl give
+
+===> sort testfile
+it wl sort the text in the file
+
+sort testfile > testfile2
+we can redirect the sorted file to another new file
+
+
+os info
+=======
+cat /etc/os-release
+cat /etc/os-rel*
+
+yum list installed ǀ grep httpd*
+(to search particular package installed or not)
+
+to know the location
+====================
+which httpd
+which tree
+which mysql
+which git
+
+to find something infile
+========================
+
+find -type f (it will display all files including hidden files)
+
+find / - type f
+find / - type f -name os-release (it wl search os-release file)
+find / - type f -name passwd (it wl search passwd file)
+
+find / -type f -name html  (it wl search file name html)
+find / -type d -name dira  (it wl search directory a)
+
+to create user & group
+======================
+useradd username
+groupadd groupname
+
+to check user
+cat /etc/passwd
+
+to check group
+cat /etc/group
+
+add user to group
+
+gpasswd -a sai devops
+
+more users to add to group
+gpasswd -M kiran,venkat devops
+
+to delete user
+gpasswd -d sai devops
+
+create hard/soft link
+=====================
+softlink is like shortcut
+
+ln -s /var/www/html/index.html softindex
+
+hardlink is like backup
+
+ln  /var/www/html/index.html hardindex
+
+-rw-r--r-- 1 root root     4 Mar 16 06:22 dir11
+drwxr-xr-x 2 root root     6 Mar 20 06:56 dir3
+
+
+r-read 4
+w-write 2
+x-execute 1
+
+owner  having 1st set of permissions ( 
+owner's group  having 2d set of permissions
+all others having 3rd set of permissions
+
+
+drwxr-xr-x 2 root root     6 Mar 20 06:56 dir3
+owner group other
+rwx    r-x   r-x
+421    401   401  
+7       5     5   755  for directory
+
+-rw-r--r-- 1 root root     4 Mar 16 06:22 dir11
+
+zip and tar
+===========
+tar -cvf dira.tar dira
+gzip dira.tar
+
+to remove
+---------
+gunzip dira.tar.gz
+tar -xvf dira.tar
+
+tar -cvzf dira.tar.gz dira
+tar -xvzf dira.tar.gz
+
+rm -rf *   droping all in the current directory
+rm -rf /*  droping all including root directory
+
+
+tochange permissions
+====================
+chmod  == to change permissions
+chown  == to change owner
+chgrop == to change group
+
+
+chmod 777 dir1  rwx-rwx-rwx  full permissions
+chmod 444 dir1  r-r-r
+chmod 764 dir1  rwx-rw-r
+chmod 764 file9 rwx-rw-r
+
+chown raj dira
+chgrp devops dira
+
+passwd raj (to put passwd to user)
+
+vi /etc/ssh/sshd_config
+
+password authentication make it as on
+
+service sshd reload
+
+then open new terminal
+
+give raj@@ec2-3-25-106-173.ap-southeast-2.compute.amazonaws.com
+
+then give password.
+
+GIT commands
+============
+yum install git -y
+git --version
+git config --global user.name "username"
+git config --global user.email "email"
+git config --list
+git init
+git branch
+git branch -M main
+git status
+git add .
+git commi -m "commit message"
+git log
+git show a6f9b691(commit id)
+cd .git/
+
+git remote add origin https://github.com/bharadwajgit123/mumbai.git
+git remote -v
+git pull origin main
+
+git ignore
+
+create one .gitignore file
+vi .gitignore
+git log -1
+git log --oneline
+git log grep "testcommit"
+
+git branch new
+git checkout new
+git merge new
+merge conflicts we will do it manually in the file
+
+git reset file_name
+git revert file_name
+
+touch sai{1..5}
+
+to remove untracked files
+git clean -n
+git clean -f
+
+do git log --oneline
+
+git tag -a filename -m "tag message" commitid
+
+git tag -a ignore -m "ignoree" 0e8954c
+
+
+git tag -d ignore to delete tag
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
