@@ -229,6 +229,3 @@ select max(sal) secondmaxsal from emp where sal < (select max(sal) from emp);
 
 
 
-6530470001395475
-0529
-106
