@@ -226,3 +226,9 @@ Columns with low cardinality (e.g., gender, marital status, department).
 == how to find second highest salary
 
 select max(sal) secondmaxsal from emp where sal < (select max(sal) from emp);
+
+
+
+6530470001395475
+0529
+106
