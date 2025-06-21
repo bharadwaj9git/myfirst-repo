@@ -228,4 +228,4 @@ Columns with low cardinality (e.g., gender, marital status, department).
 select max(sal) secondmaxsal from emp where sal < (select max(sal) from emp);
 
 
-
+how can we add modified
