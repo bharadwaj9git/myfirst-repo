@@ -5,7 +5,7 @@ pipeline{
     agent any
     //agent { label 'Demo' }
 
-    parameterss{
+    parameters{
 
         choice(name: 'action', choices: 'create\ndelete', description: 'Choose create/Destroy')
         string(name: 'ImageName', description: "name of the docker build", defaultValue: 'javapp')
